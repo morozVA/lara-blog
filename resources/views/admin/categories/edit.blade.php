@@ -27,12 +27,12 @@
                             <label for="exampleInputEmail1">Название</label>
                             <input name="title" type="text" class="form-control" id="exampleInputEmail1" placeholder=""
                                    value="{{$category->title}}">
-                        </div>
+                        </div>x
                     </div>
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
-                    <button class="btn btn-default">Назад</button>
+                    <a href="{{route('categories.index')}}" class="btn btn-default">Назад</a>
                     <button class="btn btn-warning pull-right">Изменить</button>
                 </div>
                 <!-- /.box-footer-->
