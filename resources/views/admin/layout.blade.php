@@ -12,6 +12,19 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <style>
+        table.table form {
+            display: inline-block;
+        }
+        button.delete-task{
+            background: transparent;
+            border: none;
+            color:#337ab7;
+            padding: 0;
+        }
+    </style>
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
