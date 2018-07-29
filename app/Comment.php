@@ -8,17 +8,17 @@ class Comment extends Model
 {
     public function post()
     {
-        return $this->hasOne(Post::class);
+        return $this->belongsTo(Post::class);
     }
 
     public function author()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function allow()
     {
-        $this->status - 1;
+        $this->status = 1;
         $this->save();
     }
 
@@ -40,5 +40,7 @@ class Comment extends Model
     {
         $this->delete();
     }
+
+
 
 }
