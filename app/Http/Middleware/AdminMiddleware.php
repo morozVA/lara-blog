@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Auth;
 use Closure;
 
 class AdminMiddleware
@@ -15,6 +16,11 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        if(Auth::check() && Auth::user()->is_admin && Auth::user()->status){
+            return $next($request);
+        }
+
+        abort(404);
+
     }
 }

@@ -103,6 +103,5 @@ class UsersController extends Controller
     {
         User::find($id)->remove();
         return redirect()->route('users.index');
-        ☺
     }
 }

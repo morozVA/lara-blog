@@ -17,10 +17,11 @@
         table.table form {
             display: inline-block;
         }
-        button.delete-task{
+
+        button.delete-task {
             background: transparent;
             border: none;
-            color:#337ab7;
+            color: #337ab7;
             padding: 0;
         }
     </style>
@@ -118,7 +119,9 @@
                                                 <small class="pull-right">20%</small>
                                             </h3>
                                             <div class="progress xs">
-                                                <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar progress-bar-aqua" style="width: 20%"
+                                                     role="progressbar" aria-valuenow="20" aria-valuemin="0"
+                                                     aria-valuemax="100">
                                                     <span class="sr-only">20% Complete</span>
                                                 </div>
                                             </div>
@@ -211,28 +214,7 @@
             </form>
             <!-- /.search form -->
             <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu">
-                <li class="header">MAIN NAVIGATION</li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-dashboard"></i> <span>Админ-панель</span>
-                    </a>
-                </li>
-                <li><a href="#"><i class="fa fa-sticky-note-o"></i> <span>Посты</span></a></li>
-                <li><a href="#"><i class="fa fa-list-ul"></i> <span>Категории</span></a></li>
-                <li><a href="#"><i class="fa fa-tags"></i> <span>Теги</span></a></li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-commenting"></i> <span>Комментарии</span>
-                        <span class="pull-right-container">
-              <small class="label pull-right bg-green">5</small>
-            </span>
-                    </a>
-                </li>
-                <li><a href="#"><i class="fa fa-users"></i> <span>Пользователи</span></a></li>
-                <li><a href="#"><i class="fa fa-user-plus"></i> <span>Подписчики</span></a></li>
-
-            </ul>
+            @include('admin._sidebar')
         </section>
         <!-- /.sidebar -->
     </aside>
@@ -240,8 +222,8 @@
     <!-- =============================================== -->
 
     <!-- Content Wrapper. Contains page content -->
-    @yield('content')
-    <!-- /.content-wrapper -->
+@yield('content')
+<!-- /.content-wrapper -->
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
@@ -449,6 +431,15 @@
 <!-- ./wrapper -->
 
 <script src="/js/admin.js"></script>
+
+<script src="/plugins/ckeditor/ckeditor.js"></script>
+<script src="/plugins/ckfinder/ckfinder.js"></script>
+<script>
+    $(document).ready(function () {
+        var editor = CKEDITOR.replaceAll();
+        CKFinder.setupCKEditor(editor);
+    });
+</script>
 
 </body>
 </html>

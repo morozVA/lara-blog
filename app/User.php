@@ -54,7 +54,7 @@ class User extends Authenticatable
     {
         $this->fill($fields);
 
-        $this->save;
+        $this->save();
     }
 
     public function generatePassword($password)

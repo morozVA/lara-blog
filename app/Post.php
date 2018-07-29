@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Support\Facades\Storage;
@@ -14,16 +15,30 @@ class Post extends Model
     const IS_DRAFT = 0;
     const IS_PUBLIC = 1;
 
-    protected $fillable = ['title', 'content'];
+    protected $fillable = ['title', 'content', 'date', 'description'];
 
     public function category()
     {
-        return $this->hasOne(Category::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function author()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function getCategoryTitle()
+    {
+        return ($this->category != null)
+            ? $this->category->title
+            : 'Нет категории';
+    }
+
+    public function getTagsTitles()
+    {
+        return (!$this->tags->isEmpty())
+            ? implode(', ', $this->tags->pluck('title')->all())
+            : 'Нет тегов';
     }
 
     public function tags()
@@ -61,9 +76,16 @@ class Post extends Model
         $this->save();
     }
 
+    public function removeImage()
+    {
+        if ($this->image != null) {
+            Storage::delete('uploads/' . $this->image);
+        }
+    }
+
     public function remove()
     {
-        Storage::delete('uploads/' . $this->image);
+        $this->removeImage();
         $this->delete();
     }
 
@@ -72,9 +94,9 @@ class Post extends Model
         if ($image == null) {
             return;
         }
-        Storage::delete('uploads/' . $this->image);
+        $this->removeImage();
         $filename = str_random(10) . '.' . $image->extension();
-        $image->saveAs('uploads', $filename);
+        $image->storeAs('uploads', $filename);
         $this->image = $filename;
         $this->save();
     }
@@ -143,7 +165,77 @@ class Post extends Model
         if ($this->image == null) {
             return '/img/no-image.png';
         }
-        return 'uploads/' . $this->image;
+        return '/uploads/' . $this->image;
+    }
+
+    public function setDateAttribute($value)
+    {
+        $date = Carbon::createFromFormat('d/m/y', $value)->format('Y-m-d');
+        //dd($date);
+        $this->attributes['date'] = $date;
+    }
+
+    public function getDateAttribute($value)
+    {
+        $date = Carbon::createFromFormat('Y-m-d', $value)->format('d/m/y');
+        return $date;
+    }
+
+    public function getCategoryId()
+    {
+        return $this->category != null ? $this->category->id : null;
+    }
+
+    public function getDate()
+    {
+        return Carbon::createFromFormat('d/m/y', $this->date)->format('F d, Y');
+    }
+
+    public function hasPrevious()
+    {
+        return self::where('id', '<', $this->id)->max('id');
+    }
+
+    public function hasNext()
+    {
+        return self::where('id', '>', $this->id)->min('id');
+    }
+
+    public function getPrevious()
+    {
+        $postId = $this->hasPrevious();
+        return self::find($postId);
+    }
+
+    public function getNext()
+    {
+        $postId = $this->hasNext();
+        return self::find($postId);
+    }
+
+    public function related()
+    {
+        return self::all()->where('category_id', '=', $this->getCategoryId())->except($this->id);
+    }
+
+    public function hasCategory()
+    {
+        return $this->category != null ? true : false;
+    }
+
+    public static function getPopularPosts()
+    {
+        return self::orderBy('views', 'desc')->take(3)->get();
+    }
+
+    public static function getFeaturedPosts()
+    {
+        return self::where('is_featured', 1)->take(3)->get();
+    }
+
+    public static function getRecentPosts()
+    {
+        return self::orderBy('date', 'desc')->take(4)->get();
     }
 
 }
